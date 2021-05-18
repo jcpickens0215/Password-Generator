@@ -14,7 +14,6 @@ var bLower    = true;
 var bUpper    = false;
 var bNumber   = false;
 var bSpecial  = false;
-var nCriteria = 1;
 
 function promptUser() {
 
@@ -41,50 +40,50 @@ function promptUser() {
     window.alert("ERROR: Please select at least one type of character to include.");
     promptUser();
   }
-
-  nCriteria = bLower + bUpper + bNumber + bSpecial
-  console.log(nCriteria);
 }
 
 // Generator function
 function generatePassword() {
 
+  // Container to hold password
+  var result = "";
+
+  // Get information from the user
   promptUser();
 
+  // Consolidate criteria
   if (bLower) {
     aPassCharsUsed = aPassCharsUsed.concat(aPassCharsLower);
-
-    // Print concatenation result
-    console.log("Added Lower to working char list");
-    console.log(aPassCharsUsed);
   }
-
   if (bUpper) {
     aPassCharsUsed = aPassCharsUsed.concat(aPassCharsUpper);
-
-    // Print concatenation result
-    console.log("Added Upper to working char list");
-    console.log(aPassCharsUsed);
   }
-
   if (bNumber) {
     aPassCharsUsed = aPassCharsUsed.concat(aPassCharsNumber);
-
-    // Print concatenation result
-    console.log("Added Number to working char list");
-    console.log(aPassCharsUsed);
   }
-  
   if (bSpecial) {
     aPassCharsUsed = aPassCharsUsed.concat(aPassCharsSpecial);
-
-    // Print concatenation result
-    console.log("Added Special to working char list");
-    console.log(aPassCharsUsed);
   }
 
+  // Iterate through given character count
+  for (var i = 0; i < nNumChars; i++) {
+    
+    // Generate random index
+    var j = Math.floor(Math.random() * aPassCharsUsed.length);
+
+    // Pick random character from aPassCharsUsed and add it to result
+    result = result + aPassCharsUsed[j];
+
+    // Debugging
+    console.log(aPassCharsUsed[j]);
+    console.log(result);
+  }
+
+  // Reset consolidated array in case of multiple uses
   aPassCharsUsed = [];
-  return;
+
+  // Return generated password
+  return result;
 }
 
 // Write password to the #password input
