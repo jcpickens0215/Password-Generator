@@ -5,12 +5,12 @@ var generateBtn = document.querySelector("#generate");
 var aPassCharsLower   = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 var aPassCharsUpper   = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 var aPassCharsNumber  = ["0","1","2","3","4","5","6","7","8","9"];
-var aPassCharsSpecial = ["!","@","#","$","%","^","&","*","-","_","+",",","."];
+var aPassCharsSpecial = ["!","@","#","$","%","^","&","*","-","_","+",",",".","\"","'","(",")","/",":",";","<","=",">","?","[","]","`","{","|","}","~"];
 
 // Used for generation
 var aPassCharsUsed = [];
 var nNumChars = 8;
-var bLower    = true;
+var bLower    = false;
 var bUpper    = false;
 var bNumber   = false;
 var bSpecial  = false;
@@ -18,16 +18,21 @@ var bSpecial  = false;
 function promptUser() {
 
   // Get length of password from user
-  nNumChars = window.prompt("Please enter the amount of characters you want in the password.\n(from 8 to 128)")
-  
-  // Start over if user entered invalid information
-  if ((nNumChars < 8) || (nNumChars > 128)) {
-    window.alert("ERROR: Please enter a number between 8 and 128");
-    promptUser();
+  nNumChars = parseFloat(window.prompt("Please enter the amount of characters you want in the password.\n(from 8 to 128)"));
+
+  ///// Start over if user entered invalid information
+  if (!(nNumChars !== nNumChars)) { // Check for NaN!!
+    if ((nNumChars < 8) || (nNumChars > 128)) { // nNumChars must be between 8 and 128
+      window.alert("ERROR: Please enter a number between 8 and 128");
+      promptUser(); // Start Over
+    }
+  } else { // if NaN
+    window.alert("ERROR: Not a Number!");
+    promptUser(); // Start Over
   }
 
   // Let user know that at least one type of character must be selected
-  window.alert("Please choose at least one (1) of the following criterion.");
+  window.alert("Please choose at least one (1) of the following criteria.");
 
   // Get criteria
   bLower   = window.confirm("Use lower case letters?\nOK for Yes, or Cancel for No"); 
@@ -36,9 +41,9 @@ function promptUser() {
   bSpecial = window.confirm("Use $pecial characters?\nOK for Yes, or Cancel for No");
 
   // Start over if user entered invalid information
-  if (!bLower && !bUpper && !nNumChars && !bSpecial) {
+  if (!bLower && !bUpper && !bNumber && !bSpecial) { // If user has not selected anything
     window.alert("ERROR: Please select at least one type of character to include.");
-    promptUser();
+    promptUser(); // Start Over
   }
 }
 
@@ -67,16 +72,8 @@ function generatePassword() {
 
   // Iterate through given character count
   for (var i = 0; i < nNumChars; i++) {
-    
-    // Generate random index
-    var j = Math.floor(Math.random() * aPassCharsUsed.length);
-
     // Pick random character from aPassCharsUsed and add it to result
-    result = result + aPassCharsUsed[j];
-
-    // Debugging
-    console.log(aPassCharsUsed[j]);
-    console.log(result);
+    result = result + aPassCharsUsed[Math.floor(Math.random() * aPassCharsUsed.length)];
   }
 
   // Reset consolidated array in case of multiple uses
@@ -92,7 +89,6 @@ function writePassword() {
   var passwordText = document.querySelector("#password");
 
   passwordText.value = password;
-
 }
 
 // Add event listener to generate button
