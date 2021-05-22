@@ -15,20 +15,20 @@ var bUpper    = false;
 var bNumber   = false;
 var bSpecial  = false;
 
-function promptUser() {
+function validateUserInput() {
 
   // Get length of password from user
-  nNumChars = parseFloat(window.prompt("Please enter the amount of characters you want in the password.\n(from 8 to 128)"));
+  nNumChars = parseInt(window.prompt("Please enter the amount of characters you want in the password.\n(from 8 to 128)"));
 
   ///// Start over if user entered invalid information
-  if (!(nNumChars !== nNumChars)) { // Check for NaN!!
+  if (!(isNaN(nNumChars))) { // Check for NaN!!
     if ((nNumChars < 8) || (nNumChars > 128)) { // nNumChars must be between 8 and 128
       window.alert("ERROR: Please enter a number between 8 and 128");
-      promptUser(); // Start Over
+      return false; //Could not Validate
     }
   } else { // if NaN
     window.alert("ERROR: Not a Number!");
-    promptUser(); // Start Over
+    return false; //Could not Validate
   }
 
   // Let user know that at least one type of character must be selected
@@ -43,8 +43,9 @@ function promptUser() {
   // Start over if user entered invalid information
   if (!bLower && !bUpper && !bNumber && !bSpecial) { // If user has not selected anything
     window.alert("ERROR: Please select at least one type of character to include.");
-    promptUser(); // Start Over
+    return false; //Could not Validate
   }
+  return true; // Input was successfully Validated!
 }
 
 // Generator function
@@ -54,7 +55,12 @@ function generatePassword() {
   var result = "";
 
   // Get information from the user
-  promptUser();
+  var userValidated = validateUserInput();
+
+  // If we could not validate
+  if(!userValidated) {
+    return result; // Then return nothing
+  }
 
   // Consolidate criteria
   if (bLower) {
